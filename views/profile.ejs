@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Mock Profile Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+    <div class="section no-pad-bot" id="index-banner">
+      <div class="container">
+        <br><br>
+        <h1 class="header center green-text"><%= fname %>'s Profile</h1>
+        <br><br>
+      </div>
+    </div>
+
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(const key in data) { %>
+            <% if(data.hasOwnProperty(key)) { %>
+              <tr>
+                <td><%= key %></td>
+                <td><%= data[key] %></td>
+              </tr>
+            <% } %>
+          <% } %>
+        </tbody>
+      </table>
+
+      <br><br>
+      <div class="row center">
+        <a href="javascript:void(0)" id="download-button" class="btn-large waves-effect waves-light green"  onclick="displayPayload()">Display Payload</a>
+      </div>
+      <br><br>
+
+      <pre id="jsonOutput" hidden>
+        <%= payload %>
+      </pre>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script>
+      function displayPayload() {
+        const element = document.getElementById('jsonOutput');
+        element.hidden = !element.hidden;
+      }
+    </script>
+</body>
+</html>

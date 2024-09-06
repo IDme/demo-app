@@ -125,7 +125,8 @@ app.get('/idme/:env/:protocol/:policy', function (req, res) {
   const { envDomain, clientID } = envConig[env]
   const { state, eid, groups } = req.query
   const { host } = req.headers
-  const requestProtocol = req.protocol
+  // const requestProtocol = req.protocol
+  const requestProtocol = "https"
   const isSAML = protocol == 'saml'
   const oauthEndpoint = policy == 'groups' ? `https://groups.id.me` : `${envDomain}/oauth/authorize`
   const authEndpoint = isSAML ? `${envDomain}/saml/SingleSignOnService` : oauthEndpoint

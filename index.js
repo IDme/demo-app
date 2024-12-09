@@ -125,7 +125,6 @@ app.get('/idme/:env/:protocol/:policy', function (req, res) {
   const { envDomain, clientID } = envConig[env]
   const { state, eid, groups } = req.query
   const { host } = req.headers
-  const requestProtocol = 'https'
   const isSAML = protocol == 'saml'
   const oauthEndpoint = policy == 'groups' ? `https://groups.id.me` : `${envDomain}/oauth/authorize`
   const authEndpoint = isSAML ? `${envDomain}/saml/SingleSignOnService` : oauthEndpoint
@@ -136,13 +135,13 @@ app.get('/idme/:env/:protocol/:policy', function (req, res) {
 
   switch (protocolPolicy) {
     case 'groups':
-      params = `?client_id=${clientID}&redirect_uri=${requestProtocol}://${host}/callback/${env}/${protocol}&response_type=code&scopes=${groups}&sandbox=${env == 'sandbox'}`
+      params = `?client_id=${clientID}&redirect_uri=https://${host}/callback/${env}/${protocol}&response_type=code&scopes=${groups}&sandbox=${env == 'sandbox'}`
       break;
     case 'oauth':
-      params = `?client_id=${clientID}&redirect_uri=${requestProtocol}://${host}/callback/${env}/${protocol}&response_type=code&scope=${policy}`
+      params = `?client_id=${clientID}&redirect_uri=https://${host}/callback/${env}/${protocol}&response_type=code&scope=${policy}`
       break;
     case 'oidc':
-      params = `?client_id=${clientID}&redirect_uri=${requestProtocol}://${host}/callback/${env}/${protocol}&response_type=code&scope=openid ${policy}`
+      params = `?client_id=${clientID}&redirect_uri=https://${host}/callback/${env}/${protocol}&response_type=code&scope=openid ${policy}`
       break;
     case 'saml':
       params = `?EntityID=demo.idme.solutions&AuthnContext=${policy}&NameIDPolicy=urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`
@@ -160,7 +159,6 @@ app.get('/callback/:env/:protocol', async function (req, res) {
   const { env, protocol } = req.params
   const { envDomain, clientID, clientSecret } = envConig[env]
   const { host } = req.headers
-  const requestProtocol = req.protocol
   const isOIDC = protocol == 'oidc'
   const dataEndpoint = isOIDC ? 'userinfo' : 'attributes'
   
@@ -173,7 +171,7 @@ app.get('/callback/:env/:protocol', async function (req, res) {
       code: authorizationCode,
       client_id: clientID,
       client_secret: clientSecret,
-      redirect_uri: `${requestProtocol}://${host}/callback/${env}/${protocol}`,
+      redirect_uri: `https://${host}/callback/${env}/${protocol}`,
       grant_type: 'authorization_code'
     });
     

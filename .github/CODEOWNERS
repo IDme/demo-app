@@ -1,2 +1,5 @@
 # Default owner
-* @IDme/engineering-leads @IDme/sales-consulting
+config/brakeman.ignore  @IDme/application-security
+.truffleignore          @IDme/application-security
+.trivyignore            @IDme/application-security
+*                       @IDme/engineering-leads @IDme/sales-consulting

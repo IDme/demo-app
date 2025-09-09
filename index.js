@@ -256,7 +256,8 @@ app.get('/sandbox/oidc/well-known', (req, res) => {
     "jwks_uri": "https://api.idmelabs.com/oidc/.well-known/jwks",
     "scopes_supported": [
       "openid",
-      "profile"
+      "profile",
+      "email"
     ],
     "response_types_supported": [
       "code",

@@ -411,7 +411,7 @@ app.get('/oidc/well-known/jwks', (req, res) => {
 });
 
 app.get('/sandbox/saml/entra/metadata', (req, res) => {
-  const data = `<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="api.idmelabs.com" ID="_2bb8b48fd74e44f8bd89bf764e501f89" validUntil="2025-10-02T03:59:59Z">
+  const data = `<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://api.idmelabs.com" ID="_2bb8b48fd74e44f8bd89bf764e501f89" validUntil="2025-10-02T03:59:59Z">
   <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
   <ds:SignedInfo>
   <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>

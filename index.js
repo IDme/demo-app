@@ -314,7 +314,9 @@ app.get('/sandbox/oidc/entra/well-known', (req, res) => {
     "userinfo_endpoint": "https://api.idmelabs.com/api/public/v3/userinfo",
     "jwks_uri": "https://demo.idme.solutions/oidc/well-known/jwks",
     "scopes_supported": [
-      "openid"
+      "openid",
+      "profile",
+      "email"
     ],
     "response_types_supported": [
       "code",

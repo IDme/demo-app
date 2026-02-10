@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID.me Interactive Demo</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">
+          <img src="/images/idme-logo.svg" alt="ID.me" class="header-logo-img">
+        </div>
+      </div>
+      <div class="header-center">
+        <span class="step-indicator" id="stepIndicator">Step 1 / 8</span>
+        <span class="step-title" id="stepTitle">Welcome</span>
+      </div>
+      <div class="header-right">
+        <a href="https://developers.id.me/documentation" target="_blank" rel="noopener" class="btn-docs">
+          Documentation
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h7v7M13 3L6 10"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="progressFill" style="width: 12.5%"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Left Panel -->
+      <div class="panel-left">
+        <!-- Step 1: Welcome -->
+        <div class="step-section active" data-step="1" data-side="left">
+          <div class="step-left">
+            <div class="hero-visual">
+              <img src="/images/idme-logo.svg" alt="ID.me" class="hero-logo">
+              <div class="hero-badge">Interactive Walkthrough</div>
+              <div class="hero-tagline">See how ID.me identity verification works from start to finish</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: How It Works -->
+        <div class="step-section" data-step="2" data-side="left">
+          <div class="step-left">
+            <div class="arch-diagram">
+              <div class="arch-node">
+                <div class="arch-node-icon">&#x1f4bb;</div>
+                <div class="arch-node-label">Client Application</div>
+                <div class="arch-node-sub">Your website or app</div>
+              </div>
+              <div class="arch-arrow">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3v11M6 10l4 4 4-4"/></svg>
+                <span class="arch-arrow-label">Auth Request</span>
+              </div>
+              <div class="arch-node">
+                <div class="arch-node-icon">&#x1f5a5;&#xfe0f;</div>
+                <div class="arch-node-label">Your Server</div>
+                <div class="arch-node-sub">Handles token exchange</div>
+              </div>
+              <div class="arch-arrow">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3v11M6 10l4 4 4-4"/></svg>
+                <span class="arch-arrow-label">OAuth / OIDC / SAML</span>
+              </div>
+              <div class="arch-node">
+                <div class="arch-node-icon">&#x1f6e1;&#xfe0f;</div>
+                <div class="arch-node-label">ID.me</div>
+                <div class="arch-node-sub">Identity verification</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Configuration -->
+        <div class="step-section" data-step="3" data-side="left">
+          <div class="step-left">
+            <div class="config-panel">
+              <div class="config-header">Environment Configuration</div>
+              <div class="config-body">
+                <div class="config-row">
+                  <span class="config-label">Environment</span>
+                  <div class="env-toggle">
+                    <button class="env-toggle-btn active" data-env="sandbox">Sandbox</button>
+                    <button class="env-toggle-btn" data-env="prod">Production</button>
+                  </div>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">API Domain</span>
+                  <span class="config-value" id="configDomain">api.idmelabs.com</span>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">Client ID</span>
+                  <span class="config-value" style="font-family: var(--font-mono); font-size: 12px;" id="configClientId"><%= sandboxClientId ? sandboxClientId.substring(0, 8) + '...' : 'Not configured' %></span>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">Protocols</span>
+                  <span class="config-value">OAuth, OIDC, SAML</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Choose Protocol -->
+        <div class="step-section" data-step="4" data-side="left">
+          <div class="step-left">
+            <div class="card-grid">
+              <div class="selection-card" data-protocol="oauth">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="card-content">
+                  <div class="card-title">OAuth 2.0</div>
+                  <div class="card-subtitle">Scope-based access to verified identity attributes</div>
+                </div>
+              </div>
+              <div class="selection-card" data-protocol="oidc">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                </div>
+                <div class="card-content">
+                  <div class="card-title">OpenID Connect</div>
+                  <div class="card-subtitle">Standard identity layer with JWT tokens</div>
+                </div>
+              </div>
+              <div class="selection-card" data-protocol="saml">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="card-content">
+                  <div class="card-title">SAML 2.0</div>
+                  <div class="card-subtitle">XML-based federation for enterprise SSO</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Select Policy -->
+        <div class="step-section" data-step="5" data-side="left">
+          <div class="step-left">
+            <div id="policyContainer">
+              <div class="policy-loading">
+                <div class="spinner"></div>
+                <div>Loading policies...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Live Demo Intro -->
+        <div class="step-section" data-step="6" data-side="left">
+          <div class="step-left">
+            <div class="browser-chrome">
+              <div class="browser-toolbar">
+                <div class="browser-dots">
+                  <span class="browser-dot red"></span>
+                  <span class="browser-dot yellow"></span>
+                  <span class="browser-dot green"></span>
+                </div>
+                <div class="browser-url" id="browserUrl">https://your-app.example.com/login</div>
+              </div>
+              <div class="browser-body" id="browserBody">
+                <div class="client-app-mock">
+                  <h3>Your Application</h3>
+                  <p>Click the button below to start the ID.me verification flow</p>
+                  <button class="btn-verify" id="btnVerify">
+                    <img src="/images/idme-signin-button.svg" alt="Sign in with ID.me" class="btn-verify-img">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7: Running Auth Flow -->
+        <div class="step-section" data-step="7" data-side="left">
+          <div class="step-left">
+            <div class="browser-chrome">
+              <div class="browser-toolbar">
+                <div class="browser-dots">
+                  <span class="browser-dot red"></span>
+                  <span class="browser-dot yellow"></span>
+                  <span class="browser-dot green"></span>
+                </div>
+                <div class="browser-url">https://your-app.example.com/login</div>
+              </div>
+              <div class="browser-body" id="browserBodyFlow">
+                <div class="client-app-mock">
+                  <h3>Your Application</h3>
+                  <p>Waiting for ID.me verification...</p>
+                  <button class="btn-verify" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Verify with ID.me
+                  </button>
+                </div>
+                <div class="popup-overlay" id="popupOverlay">
+                  <div class="popup-indicator">
+                    <div class="popup-spinner"></div>
+                    <p>ID.me popup is open...<br><small>Complete verification in the popup window</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 8: Results -->
+        <div class="step-section" data-step="8" data-side="left">
+          <div class="step-left">
+            <div class="browser-chrome">
+              <div class="browser-toolbar">
+                <div class="browser-dots">
+                  <span class="browser-dot red"></span>
+                  <span class="browser-dot yellow"></span>
+                  <span class="browser-dot green"></span>
+                </div>
+                <div class="browser-url">https://your-app.example.com/profile</div>
+              </div>
+              <div class="browser-body">
+                <div class="client-app-mock" style="text-align: left;">
+                  <div class="results-success-banner">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="#2e7d32"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-2 15l-5-5 1.41-1.41L8 12.17l7.59-7.59L17 6l-9 9z"/></svg>
+                    Identity Verified Successfully
+                  </div>
+                  <table class="results-table" id="resultsTable">
+                    <thead>
+                      <tr><th>Attribute</th><th>Value</th></tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                      <tr><td>uuid</td><td class="text-muted">Waiting for auth...</td></tr>
+                      <tr><td>fname</td><td class="text-muted">--</td></tr>
+                      <tr><td>lname</td><td class="text-muted">--</td></tr>
+                      <tr><td>email</td><td class="text-muted">--</td></tr>
+                      <tr><td>zip</td><td class="text-muted">--</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="panel-right">
+        <!-- Step 1: Welcome Right -->
+        <div class="step-section active" data-step="1" data-side="right">
+          <div class="step-right">
+            <div class="panel-content">
+              <h1 class="step-heading">Welcome to the ID.me Demo</h1>
+              <p class="step-description">
+                This interactive walkthrough demonstrates how ID.me identity verification integrates into your application. You'll see the full flow from configuration to live authentication.
+              </p>
+              <div class="feature-list">
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 2.5l-7 7-3-3"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>Configure</strong> your environment and choose a protocol</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 2.5l-7 7-3-3"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>Select a policy</strong> to define the verification level</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 2.5l-7 7-3-3"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>Run a live auth flow</strong> using ID.me sandbox credentials</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 2.5l-7 7-3-3"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>Inspect API calls</strong> and see the data returned</div>
+                </div>
+              </div>
+              <div class="learn-more">
+                <button class="learn-more-toggle">
+                  Learn More: ID.me Digital Wallet Concepts
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </button>
+                <div class="learn-more-body">
+                  <h4>Authentication vs. Identity Proofing</h4>
+                  <p>Traditional login systems only <strong>authenticate</strong> — they confirm that a returning user knows their password. ID.me goes further with <strong>identity proofing</strong>, verifying that a person is who they claim to be using government-issued documents and biometric checks.</p>
+                  <h4>NIST Identity Assurance Levels (IAL)</h4>
+                  <ul>
+                    <li><strong>IAL1</strong> — Self-asserted attributes only (email, name). No document verification.</li>
+                    <li><strong>IAL2</strong> — Remote identity proofing with document verification and liveness detection. Meets federal standards for most use cases.</li>
+                    <li><strong>IAL3</strong> — In-person identity proofing with a trained operator. Highest assurance level.</li>
+                  </ul>
+                  <p>ID.me is a NIST 800-63-3 compliant credential service provider (CSP), meaning verified identities meet federal security standards.</p>
+                  <h4>Community Verification</h4>
+                  <p>Beyond individual identity proofing, ID.me verifies membership in specific <strong>communities</strong> — groups of people who share a common affiliation. This lets organizations offer targeted benefits, discounts, or access to verified community members.</p>
+                  <h4>Supported Communities</h4>
+                  <ul>
+                    <li><strong>Military</strong> — Active duty, veterans, military spouses, dependents, Gold Star families. Verified against DoD records (DEERS/DMDC).</li>
+                    <li><strong>First Responders</strong> — Law enforcement, firefighters, EMTs, paramedics, 911 dispatchers. Verified via employer and credential databases.</li>
+                    <li><strong>Students</strong> — Currently enrolled college and university students. Verified against school enrollment records.</li>
+                    <li><strong>Teachers & Faculty</strong> — K-12 teachers, professors, and education staff. Verified via institutional email or employment records.</li>
+                    <li><strong>Government</strong> — Federal, state, and local government employees. Verified through agency records.</li>
+                    <li><strong>Medical Professionals</strong> — Nurses, doctors, pharmacists, and other licensed healthcare workers. Verified via license databases.</li>
+                  </ul>
+                  <h4>How Community Verification Works</h4>
+                  <p>When your application requests a community-specific policy, ID.me prompts the user to verify both their <strong>identity</strong> and their <strong>group membership</strong>. The verification method depends on the community — it may involve checking government databases, validating a .mil/.gov email, uploading credentials, or confirming enrollment records.</p>
+                  <p>After verification, your app receives a <code>group</code> attribute confirming the user's community membership, along with standard identity attributes. Community verification status is cached, so returning users don't need to re-verify every time.</p>
+                  <div class="lm-tip">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 8a.75.75 0 01-1.5 0V5a.75.75 0 011.5 0v3z"/></svg>
+                    ID.me has verified over 100 million users across government, healthcare, and commercial sectors.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: How It Works Right -->
+        <div class="step-section" data-step="2" data-side="right">
+          <div class="step-right">
+            <div class="panel-content">
+              <h1 class="step-heading">How It Works</h1>
+              <p class="step-description">
+                ID.me acts as a trusted identity provider. Your application redirects users to ID.me for verification, then receives verified identity attributes back through a standard protocol.
+              </p>
+              <p class="step-description">
+                The flow follows standard OAuth 2.0 / OpenID Connect / SAML patterns:
+              </p>
+              <p class="step-description">
+                <ul>
+                  <li>User clicks "Verify with ID.me" in your app</li>
+                  <li>User is redirected to (or a popup opens for) ID.me</li>
+                  <li>User verifies their identity with ID.me</li>
+                  <li>ID.me sends an authorization code to your server</li>
+                  <li>Your server exchanges the code for user data</li>
+                </ul>
+              </p>
+              <div class="info-notice">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4M8 5.5v-.01"/></svg>
+                This demo uses a popup window so you can see the walkthrough and auth flow side by side.
+              </div>
+              <div class="learn-more">
+                <button class="learn-more-toggle">
+                  Learn More: Authorization Code Flow Deep Dive (OAuth / OIDC)
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </button>
+                <div class="learn-more-body">
+                  <h4>Why an Authorization Code?</h4>
+                  <p>Instead of sending tokens directly to the browser (which could be intercepted), the authorization code flow uses a two-step exchange. The browser only sees a short-lived code, and your <strong>server</strong> exchanges it for tokens using your client secret &mdash; which never leaves the server.</p>
+                  <h4>Security Parameters</h4>
+                  <ul>
+                    <li><strong><code>state</code></strong> &mdash; A random value your app generates and verifies on callback to prevent CSRF attacks. The callback must match the state you sent.</li>
+                    <li><strong><code>nonce</code></strong> (OIDC) &mdash; A random value embedded in the ID token. Your server verifies it to prevent token replay attacks.</li>
+                    <li><strong>PKCE</strong> (Proof Key for Code Exchange) &mdash; An extension where your app sends a <code>code_challenge</code> hash with the auth request and proves it on token exchange with the original <code>code_verifier</code>. Prevents authorization code interception.</li>
+                  </ul>
+                  <h4>Redirect vs. Popup</h4>
+                  <p>Full-page redirects are the standard approach and work everywhere. Popup windows keep your app visible but require careful handling of <code>window.opener</code> and <code>postMessage</code>. Popups may be blocked by browsers if not triggered by a direct user click.</p>
+                  <div class="lm-tip">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 8a.75.75 0 01-1.5 0V5a.75.75 0 011.5 0v3z"/></svg>
+                    Always validate the <code>state</code> parameter on your callback to prevent cross-site request forgery. Never skip this check in production.
+                  </div>
+                </div>
+              </div>
+              <div class="learn-more">
+                <button class="learn-more-toggle">
+                  Learn More: SAML HTTP POST Flow Deep Dive
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </button>
+                <div class="learn-more-body">
+                  <h4>How SAML Differs from OAuth/OIDC</h4>
+                  <p>Unlike OAuth/OIDC which use an authorization code exchanged via back-channel, SAML uses a <strong>browser-mediated assertion</strong>. There is no token exchange step &mdash; the identity data is delivered directly in a signed XML document posted to your server.</p>
+                  <h4>SP-Initiated SSO Flow</h4>
+                  <ul>
+                    <li><strong>Step 1:</strong> Your app (the Service Provider) redirects the user to ID.me's <code>SingleSignOnService</code> endpoint with parameters like <code>EntityID</code> and <code>AuthnContext</code>.</li>
+                    <li><strong>Step 2:</strong> The user authenticates and verifies their identity at ID.me (the Identity Provider).</li>
+                    <li><strong>Step 3:</strong> ID.me constructs a signed SAML Response containing the assertion with verified attributes.</li>
+                    <li><strong>Step 4:</strong> The user's browser is redirected via an <strong>auto-submitting HTML form</strong> that POSTs the base64-encoded <code>SAMLResponse</code> to your Assertion Consumer Service (ACS) URL.</li>
+                    <li><strong>Step 5:</strong> Your ACS endpoint validates the signature, checks conditions, and extracts the user's attributes from the assertion.</li>
+                  </ul>
+                  <h4>HTTP POST Binding</h4>
+                  <p>The HTTP POST binding means the SAML Response travels through the user's browser as a form POST &mdash; not as a server-to-server call. ID.me returns an HTML page with a hidden form containing the <code>SAMLResponse</code> and optional <code>RelayState</code>, and JavaScript auto-submits it to your ACS URL.</p>
+                  <h4>Key SAML Concepts</h4>
+                  <ul>
+                    <li><strong>Assertion Consumer Service (ACS)</strong> &mdash; Your endpoint that receives and processes the SAML Response. Must be pre-registered with ID.me and match exactly.</li>
+                    <li><strong>EntityID</strong> &mdash; A unique identifier for your Service Provider, shared with ID.me during setup.</li>
+                    <li><strong>RelayState</strong> &mdash; An opaque value preserved through the flow. Use it to remember where to send the user after authentication (e.g. the page they were on).</li>
+                    <li><strong>Metadata Exchange</strong> &mdash; Both SP and IdP publish XML metadata documents describing their endpoints, certificates, and capabilities. This enables automated trust configuration.</li>
+                  </ul>
+                  <div class="lm-tip">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 8a.75.75 0 01-1.5 0V5a.75.75 0 011.5 0v3z"/></svg>
+                    Because the SAML assertion passes through the browser, XML signature validation is critical. Without it, an attacker could modify the assertion in transit.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Configuration Right -->
+        <div class="step-section" data-step="3" data-side="right">
+          <div class="step-right">
+            <div class="panel-content">
+              <h1 class="step-heading">Configuration</h1>
+              <p class="step-description">
+                This demo is pre-configured to use the ID.me <strong>sandbox environment</strong>, which provides a safe testing space with test credentials.
+              </p>
+              <p class="step-description">
+                <strong>Sandbox</strong> uses <code>api.idmelabs.com</code> and allows testing without real identity documents. <strong>Production</strong> uses <code>api.id.me</code> and performs real verification.
+              </p>
+              <div class="section-divider"></div>
+              <p class="step-description">
+                ID.me supports three authentication protocols:
+              </p>
+              <div class="feature-list">
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>OAuth 2.0</strong> &mdash; Scope-based attribute access</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>OpenID Connect</strong> &mdash; JWT-based identity tokens</div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div class="feature-text"><strong>SAML 2.0</strong> &mdash; XML-based enterprise federation</div>
+                </div>
+              </div>
+              <div class="learn-more">
+                <button class="learn-more-toggle">
+                  Learn More: Environment & Configuration Best Practices
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </button>
+                <div class="learn-more-body">
+                  <h4>Sandbox vs. Production</h4>
+                  <p>The sandbox environment (<code>api.idmelabs.com</code>) mirrors production behavior but uses test data. No real identity documents are verified. This is where you develop and test your integration before going live.</p>
+                  <ul>
+                    <li><strong>Sandbox</strong> &mdash; Test credentials work (e.g. <code>test@id.me</code>), no real verification occurs, separate client credentials from production.</li>
+                    <li><strong>Production</strong> &mdash; Real users, real document verification, real identity data. Uses <code>api.id.me</code>.</li>
+                  </ul>
+                  <h4>Client Credential Security</h4>
+                  <p>Your <code>client_secret</code> is like a password for your application. It must <strong>never</strong> be exposed in client-side JavaScript, mobile app bundles, or public repositories. Store it in environment variables or a secrets manager.</p>
+                  <h4>Redirect URI Configuration</h4>
+                  <p>Redirect URIs must be pre-registered in the ID.me developer portal. The URI in your auth request must <strong>exactly match</strong> a registered URI &mdash; including protocol, host, port, and path. Mismatches cause <code>invalid_grant</code> errors.</p>
+                  <div class="lm-tip">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 8a.75.75 0 01-1.5 0V5a.75.75 0 011.5 0v3z"/></svg>
+                    Always use HTTPS in production. ID.me requires TLS for all redirect URIs in the production environment.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Choose Protocol Right -->
+        <div class="step-section" data-step="4" data-side="right">
+          <div class="step-right">
+            <div class="panel-content">
+              <h1 class="step-heading">Choose Your Protocol</h1>
+              <p class="step-description">
+                Select an authentication protocol from the left panel to use for the live demo. Each protocol returns verified identity data in a different format.
+              </p>
+              <p class="step-description">
+                Not sure which to pick? <strong>OAuth 2.0</strong> is the most common choice for web applications. You can also just click NEXT to continue with the default.
+              </p>
+              <div class="info-notice">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4M8 5.5v-.01"/></svg>
+                If no protocol is selected, OAuth 2.0 will be used by default.
+              </div>
+              <div class="learn-more">
+                <button class="learn-more-toggle">
+                  Learn More: Protocol Comparison
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </button>
+                <div class="learn-more-body">
+                  <h4>OAuth 2.0</h4>
+                  <p>A delegation protocol for <strong>authorization</strong>. Your app requests specific scopes (e.g. <code>http://idmanagement.gov/ns/assurance/ial/2</code>) and receives an access token to retrieve user attributes from the ID.me API. Data comes back as plain JSON.</p>
+                  <ul>
+                    <li>Best for: Web and mobile apps that need verified attributes</li>
+                    <li>Token format: Opaque access token</li>
+                    <li>Data format: JSON from <code>/api/public/v3/attributes</code></li>
+                  </ul>
+                  <h4>OpenID Connect (OIDC)</h4>
+                  <p>An identity layer <strong>on top of</strong> OAuth 2.0. Adds the <code>openid</code> scope, which returns an <strong>ID token</strong> (a signed JWT) containing user claims. Your server can verify the JWT signature without making additional API calls.</p>
+                  <ul>
+                    <li>Best for: Apps that want cryptographically signed identity claims</li>
+                    <li>Token format: JWT (JSON Web Token) with <code>id_token</code></li>
+                    <li>Data format: JWT claims or JSON from <code>/api/public/v3/userinfo</code></li>
+                    <li>Discovery: <code>/.well-known/openid-configuration</code></li>
+                  </ul>
+                  <h4>SAML 2.0</h4>
+                  <p>An XML-based federation protocol commonly used in <strong>enterprise</strong> environments. The identity provider (ID.me) sends a signed XML assertion to your Assertion Consumer Service (ACS) URL via HTTP POST binding.</p>
+                  <ul>
+                    <li>Best for: Enterprise SSO, government systems, legacy integrations</li>
+                    <li>Token format: Signed XML assertion</li>
+                    <li>Data format: XML attributes in SAML assertion</li>
+                    <li>Metadata: SP and IdP metadata XML documents</li>
+                  </ul>
+                  <div class="lm-tip">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 8a.75.75 0 01-1.5 0V5a.75.75 0 011.5 0v3z"/></svg>
+                    If you're starting fresh, <strong>OAuth 2.0</strong> or <strong>OIDC</strong> are the recommended choices. SAML is typically used when integrating with systems that already require it.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Select Policy Right -->
+        <div class="step-section" data-step="5" data-side="right">
+          <div class="step-right">
+            <div class="panel-content">
+              <h1 class="step-heading">Select a Policy</h1>
+              <p class="step-description">
+                Policies define what level of identity verification is required and what attributes are returned. Select a policy from the left to use in the demo.
+              </p>
+              <p class="step-description">
+                Each policy maps to a verification scope &mdash; from basic email verification to full identity proofing with document verification.
+              </p>
+              <div class="info-notice">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4M8 5.5v-.01"/></svg>
+                Policies are fetched from the ID.me API based on your client configuration.
+              </div>
+              <div class="learn-more">
+                <button class="learn-more-toggle">
+                  Learn More: Policies, Scopes & Assurance Levels
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </button>
+                <div class="learn-more-body">
+                  <h4>What Is a Policy?</h4>
+                  <p>A policy defines the <strong>scope of verification</strong> required. It controls what level of identity proofing the user must complete and what attributes your application will receive back. Policies are configured in the ID.me developer portal and map to specific scopes in your auth request.</p>
+                  <h4>How Policies Map to Scopes</h4>
+                  <p>In OAuth/OIDC, the policy handle is sent as a <code>scope</code> parameter (e.g. <code>scope=http://idmanagement.gov/ns/assurance/ial/2</code>). In SAML, it's sent as the <code>AuthnContext</code> parameter. Either way, it tells ID.me which verification flow to present to the user.</p>
+                  <h4>Common Policy Types</h4>
+                  <ul>
+                    <li><strong>IAL1 / Basic</strong> &mdash; Self-asserted identity. User provides name, email, phone. No document check. Fastest to complete.</li>
+                    <li><strong>IAL2 / Identity Proofing</strong> &mdash; Document-verified identity. User submits a government ID and completes liveness detection. Meets NIST 800-63-3 IAL2.</li>
+                    <li><strong>Group Affiliation</strong> &mdash; Verifies membership in a specific group (military, student, first responder, etc.) in addition to identity.</li>
+                  </ul>
+                  <h4>Returned Attributes</h4>
+                  <p>The attributes you receive depend on the policy. A basic policy may only return <code>uuid</code>, <code>email</code>, and <code>fname</code>/<code>lname</code>. An IAL2 policy returns additional fields like <code>social</code>, <code>dob</code>, <code>address</code>, and verification status.</p>
+                  <div class="lm-tip">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 8a.75.75 0 01-1.5 0V5a.75.75 0 011.5 0v3z"/></svg>
+                    Request only the minimum scope your application needs. Over-scoping increases user friction and may require additional compliance steps.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6: Live Demo Right (JS-rendered, protocol-aware) -->
+        <div class="step-section" data-step="6" data-side="right">
+          <div class="step-right">
+            <div class="panel-content" id="step6RightContent">
+              <!-- Populated by walkthrough.js renderStep6() -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7: Running Auth Right (JS-rendered, protocol-aware) -->
+        <div class="step-section" data-step="7" data-side="right">
+          <div class="step-right">
+            <div class="panel-content" id="step7RightContent">
+              <!-- Populated by walkthrough.js renderStep7() -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 8: Results Right (JS-rendered, protocol-aware) -->
+        <div class="step-section" data-step="8" data-side="right">
+          <div class="step-right">
+            <div class="panel-content" id="step8RightContent">
+              <!-- Populated by walkthrough.js renderStep8() -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+      <button class="btn btn-back" id="btnBack" disabled>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+        Back
+      </button>
+      <button class="btn btn-next" id="btnNext">
+        Next
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Pass server config to client -->
+  <script>
+    window.__CONFIG__ = {
+      env: '<%= env %>',
+      sandboxDomain: 'https://api.idmelabs.com',
+      prodDomain: 'https://api.id.me',
+      sandboxClientId: '<%= sandboxClientId %>',
+      prodClientId: '<%= prodClientId %>'
+    };
+  </script>
+  <script src="/js/walkthrough.js"></script>
+</body>
+</html>

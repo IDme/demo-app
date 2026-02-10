@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Application</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container {
+      text-align: center;
+      max-width: 360px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .btn-verify {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: #2d6a4f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-verify:hover {
+      background: #245a42;
+    }
+    .btn-verify svg {
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your Application</h1>
+    <p>Click the button below to verify your identity with ID.me</p>
+    <button class="btn-verify" id="btnVerify">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Verify with ID.me
+    </button>
+  </div>
+  <script>
+    document.getElementById('btnVerify').addEventListener('click', function() {
+      // Notify parent walkthrough to start auth flow
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'start_auth' }, '*');
+      }
+    });
+  </script>
+</body>
+</html>

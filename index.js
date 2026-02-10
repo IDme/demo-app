@@ -82,12 +82,35 @@ app.param('policy', async function(req, res, next){
 
 app.get('/', (req, res) => {
   try {
-    res.render('index', { 
+    res.render('walkthrough', {
+      env: 'sandbox',
+      sandboxClientId: envConig.sandbox.clientID || '',
+      prodClientId: envConig.prod.clientID || '',
     });
   } catch (error) {
     console.error('Error making API request:', error);
     res.status(500).send('An error occurred');
-  } 
+  }
+});
+
+// API endpoint for policies (used by walkthrough JS)
+app.get('/api/policies/:env', async (req, res) => {
+  const { env } = req.params;
+  if (!envConig[env]) return res.status(404).json({ error: 'Invalid environment' });
+
+  const { envDomain, clientID, clientSecret } = envConig[env];
+  try {
+    const apiResponse = await axios.get(policiesEndpoint(envDomain, clientID, clientSecret));
+    res.json(apiResponse.data);
+  } catch (error) {
+    console.error('Error fetching policies:', error.message);
+    res.status(500).json({ error: 'Failed to fetch policies' });
+  }
+});
+
+// Mock client app page (for iframe in walkthrough)
+app.get('/client-app', (req, res) => {
+  res.render('client-app');
 });
 
 app.get('/idme/:env', async (req, res) => {
@@ -168,12 +191,16 @@ app.get('/callback/:env/:protocol', async function (req, res) {
     return res.status(400).send('Authorization code not provided');
   }
 
+  const isPopup = req.query.popup === '1';
+
   try {
+    const scheme = req.get('x-forwarded-proto') || req.protocol;
+    const redirectUri = `${scheme}://${host}/callback/${env}/${protocol}${isPopup ? '?popup=1' : ''}`;
     const tokenResponse = await axios.post(`${envDomain}/oauth/token`, {
       code: authorizationCode,
       client_id: clientID,
       client_secret: clientSecret,
-      redirect_uri: `https://${host}/callback/${env}/${protocol}`,
+      redirect_uri: redirectUri,
       grant_type: 'authorization_code'
     });
     
@@ -190,6 +217,20 @@ app.get('/callback/:env/:protocol', async function (req, res) {
     res.clearCookie
     res.cookie('idmePayload', apiResponse.data, { expires: new Date(Date.now() + 60000) })
     res.cookie('idmeData', data, { expires: new Date(Date.now() + 60000) })
+
+    // Popup mode: render popup-callback instead of redirecting
+    if (req.query.popup === '1') {
+      return res.render('popup-callback', {
+        callbackData: {
+          userData: data,
+          payload: apiResponse.data,
+          code: authorizationCode,
+          protocol: protocol,
+          env: env,
+        }
+      });
+    }
+
     res.redirect('/profile');
   } catch (error) {
     console.error('Error exchanging authorization code or making API request:', error);
@@ -221,6 +262,20 @@ app.post('/callback/:env/:protocol', function (req, res) {
     res.clearCookie
     res.cookie('idmePayload', String(attributes), { expires: new Date(Date.now() + 60000) })
     res.cookie('idmeData', idmeData, { expires: new Date(Date.now() + 60000) })
+
+    // Popup mode: render popup-callback instead of redirecting
+    // SAML uses RelayState (POST body) since there are no query params on the callback
+    if (req.query.popup === '1' || req.body.RelayState === 'popup') {
+      return res.render('popup-callback', {
+        callbackData: {
+          userData: idmeData,
+          payload: String(attributes),
+          protocol: req.params.protocol,
+          env: req.params.env,
+        }
+      });
+    }
+
     res.redirect('/profile');
   } else {
     console.log('No Assertion found in the SAML response.');

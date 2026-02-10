@@ -240,20 +240,6 @@
       <p class="step-description">
         Click <strong>"Verify with ID.me"</strong> in the mock browser to start a real ${escapeHtml(cfg.label)} authentication flow. A popup window will open with the ID.me login page.
       </p>
-      <p class="step-description">
-        Use the sandbox test credentials below to complete the verification.
-      </p>
-      <div class="credentials-box">
-        <div class="credentials-box-title">Sandbox Test Credentials</div>
-        <div class="credentials-row">
-          <span class="credentials-label">Email</span>
-          <span class="credentials-value">test@id.me</span>
-        </div>
-        <div class="credentials-row">
-          <span class="credentials-label">Password</span>
-          <span class="credentials-value">P@ssword1!</span>
-        </div>
-      </div>
       ${samlNotice}
       <div class="api-inspector" style="margin-top: 24px;">
         <div class="api-inspector-tabs" id="step6Tabs">

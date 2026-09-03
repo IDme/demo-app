@@ -3,7 +3,7 @@ import axios from 'axios'
 import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import xpath from 'xpath'
 import 'dotenv/config';
 

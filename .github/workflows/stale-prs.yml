@@ -2,6 +2,10 @@
 # (enable_stale_pr_checker = true by default). It runs daily and warns/closes
 # PRs that have been inactive for too long. Issues are never affected.
 #
+# The behaviour lives in workflow-library so the actions/stale version is held in one
+# place rather than in every managed repo. Change the thresholds or the messages
+# there; this file only changes to add a trigger or override an input.
+#
 # Default behavior:
 #   Day 21: Adds 'stale' label + posts a warning comment
 #   Day 28: Closes the PR if no new activity since the warning
@@ -23,28 +27,5 @@ permissions:
 
 jobs:
   stale:
-    runs-on: github-arc-runner-prod
-    steps:
-      - uses: actions/stale@v10
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          days-before-pr-stale: 21
-          days-before-pr-close: 7
-          stale-pr-label: 'stale'
-          exempt-pr-labels: 'pinned,security,do-not-close'
-          stale-pr-message: |
-            :warning: **This PR has been inactive for 21 days.**
-
-            It will be automatically closed in **7 days** if there is no new activity.
-
-            To keep this PR open, you can:
-            - Push a new commit
-            - Leave a comment
-            - Add the `pinned` or `do-not-close` label if this PR should never be auto-closed
-          close-pr-message: |
-            This PR has been automatically closed due to 21 days of inactivity after being marked stale.
-
-            If this work is still needed, please reopen the PR or create a new one.
-          operations-per-run: 100
-          days-before-issue-stale: -1
-          days-before-issue-close: -1
+    uses: IDme/workflow-library/.github/workflows/stale-pr-checker.yml@master
+    secrets: inherit

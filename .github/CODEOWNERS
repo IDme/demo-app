@@ -1,5 +1,5 @@
 # Default owner
-config/brakeman.ignore  @IDme/application-security
-.truffleignore          @IDme/application-security
-.trivyignore            @IDme/application-security
+config/brakeman.ignore  @IDme/product-security
+.truffleignore          @IDme/product-security
+.trivyignore            @IDme/product-security
 *                       @IDme/engineering-leads @IDme/sales-engineering

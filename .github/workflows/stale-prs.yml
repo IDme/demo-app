@@ -27,5 +27,4 @@ permissions:
 
 jobs:
   stale:
-    uses: IDme/workflow-library/.github/workflows/stale-pr-checker.yml@master
-    secrets: inherit
+    uses: IDme/workflow-library/.github/workflows/stale-pr-checker.yml@a3ec0d5671108219ec14689d46731c7acd3957bc # master @ 2026-09-21

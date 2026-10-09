@@ -1,5 +1,8 @@
 # Default owner
 *                       @IDme/engineering-leads @IDme/sales-engineering
-config/brakeman.ignore  @IDme/product-security
-.truffleignore          @IDme/product-security
-.trivyignore            @IDme/product-security
+
+# Scanner ignore files: product security or security leads approves. Keep this
+# block last; CODEOWNERS uses the last matching line, so anything below it wins.
+config/brakeman.ignore  @IDme/product-security @IDme/security-leads
+.truffleignore          @IDme/product-security @IDme/security-leads
+.trivyignore            @IDme/product-security @IDme/security-leads

@@ -1,5 +1,5 @@
 # Default owner
-*                       @IDme/engineering-leads @IDme/sales-engineering
+*                       @IDme/sales-engineering
 
 # Scanner ignore files: product security or security leads approves. Keep this
 # block last; CODEOWNERS uses the last matching line, so anything below it wins.
